@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/signal"
 	"path"
-	"sync"
 	"syscall"
 
 	"golang.org/x/sync/errgroup"
