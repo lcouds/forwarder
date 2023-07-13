@@ -20,8 +20,6 @@ import (
 	"k8s.io/client-go/transport/spdy"
 )
 
-var once sync.Once
-
 // It is to forward port whith kubeconfig bytes.
 func WithForwardersEmbedConfig(ctx context.Context, options []*Option, kubeconfigBytes []byte) (*Result, error) {
 	kubeconfigGetter := func() (*clientcmdapi.Config, error) {
@@ -114,11 +112,9 @@ func forwarders(ctx context.Context, options []*Option, config *restclient.Confi
 
 	ret := &Result{
 		Close: func() {
-			once.Do(func() {
-				for _, c := range carries {
-					close(c.StopCh)
-				}
-			})
+			for _, c := range carries {
+				close(c.StopCh)
+			}
 		},
 		Ready: func() ([][]portforward.ForwardedPort, error) {
 			pfs := [][]portforward.ForwardedPort{}
